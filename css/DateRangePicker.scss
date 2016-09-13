@@ -17,11 +17,7 @@
 }
 
 .DateRangePicker__picker {
-  background-color: $react-dates-color-white;
   z-index: 1;
-  position: absolute;
-  top: 145%;
-  left: 0;
 
   &::before,
   &::after {

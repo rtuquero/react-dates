@@ -4,6 +4,7 @@ import moment from 'moment';
 import cx from 'classnames';
 import Portal from 'react-portal';
 import includes from 'array-includes';
+import Tether from 'tether';
 
 import isTouchDevice from '../utils/isTouchDevice';
 import toMomentObject from '../utils/toMomentObject';
@@ -71,6 +72,8 @@ export default class DateRangePicker extends React.Component {
 
     this.isTouchDevice = isTouchDevice();
 
+    this.initializeTether = this.initializeTether.bind(this);
+
     this.onOutsideClick = this.onOutsideClick.bind(this);
     this.onDayMouseEnter = this.onDayMouseEnter.bind(this);
     this.onDayMouseLeave = this.onDayMouseLeave.bind(this);
@@ -82,6 +85,15 @@ export default class DateRangePicker extends React.Component {
     this.onEndDateChange = this.onEndDateChange.bind(this);
     this.onEndDateFocus = this.onEndDateFocus.bind(this);
     this.clearDates = this.clearDates.bind(this);
+  }
+
+  componentDidMount() {
+    window.addEventListener('resize', this.initializeTether);
+    this.initializeTether();
+  }
+
+  componentWillUnmount() {
+    if (this.tether) this.tether.destroy();
   }
 
   onClearFocus() {
@@ -232,6 +244,22 @@ export default class DateRangePicker extends React.Component {
     return ReactDOM.findDOMNode(this.dayPicker);
   }
 
+  initializeTether() {
+    if (this.tether) this.tether.destroy();
+    this.tether = new Tether({
+      element: this.dayPickerContainer,
+      target: ReactDOM.findDOMNode(this.input),
+      attachment: 'top left',
+      targetAttachment: 'bottom left',
+      offset: '-20px 0',
+      constraints: [{
+        to: 'scrollParent',
+        attachment: 'none',
+        pin: ['right'],
+      }],
+    });
+  }
+
   clearDates() {
     this.props.onDatesChange({ startDate: null, endDate: null });
     this.props.onFocusChange(START_DATE);
@@ -346,7 +374,10 @@ export default class DateRangePicker extends React.Component {
     const onOutsideClick = withPortal ? this.onOutsideClick : () => {};
 
     return (
-      <div className={this.getDayPickerContainerClasses()}>
+      <div
+        ref={ref => { this.dayPickerContainer = ref; }}
+        className={this.getDayPickerContainerClasses()}
+      >
         <DayPicker
           ref={ref => { this.dayPicker = ref; }}
           orientation={orientation}
@@ -403,6 +434,7 @@ export default class DateRangePicker extends React.Component {
       <div className="DateRangePicker">
         <OutsideClickHandler onOutsideClick={onOutsideClick}>
           <DateRangePickerInput
+            ref={(ref) => { this.input = ref; }}
             startDateId={startDateId}
             startDatePlaceholderText={this.props.startDatePlaceholderText}
             isStartDateFocused={focusedInput === START_DATE}

@@ -97,8 +97,6 @@ export default class DateInput extends React.Component {
       dataMonth = arrDate[1];
       dataYear = arrDate[2];
     }
-    window.console.log(value)
-    window.console.log('dataMonth:', dataMonth);
 
     return (
       <div

@@ -90,12 +90,14 @@ export default class DateInput extends React.Component {
 
     let value = dateValue || dateString;
     const arrDate = value.split('-');
-    let dataMonth = '';
-    let dataYear = '';
-    if (arrDate.length) {
-      value = arrDate[0];
-      dataMonth = arrDate[1];
-      dataYear = arrDate[2];
+    if (arrDate.length > 1) {
+      value = (
+        <span className="DateInput__display-date">
+          <span className="DateInput__display-date--day">{arrDate[0]}</span>
+          <span className="DateInput__display-date--month">{arrDate[1]}</span>
+          <span className="DateInput__display-date--year">{arrDate[2]}</span>
+        </span>
+      );
     }
 
     return (
@@ -131,10 +133,8 @@ export default class DateInput extends React.Component {
             'DateInput__display-text--focused': focused,
             'DateInput__display-text--disabled': disabled,
           })}
-          data-month={dataMonth}
-          data-year={dataYear}
         >
-          {value}
+          {value || placeholder}
         </div>
       </div>
     );

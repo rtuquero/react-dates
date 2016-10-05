@@ -22,7 +22,7 @@ const datesList = [
 
 storiesOf('DateRangePicker', module)
   .add('default', () => (
-    <DateRangePickerWrapper />
+    <DateRangePickerWrapper displayFormat={'DD-MMM-YYYY'} />
   ))
   .add('single month', () => (
     <DateRangePickerWrapper

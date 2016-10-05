@@ -88,7 +88,17 @@ export default class DateInput extends React.Component {
       disabled,
     } = this.props;
 
-    const value = dateValue || dateString;
+    let value = dateValue || dateString;
+    const arrDate = value.split('-');
+    let dataMonth = '';
+    let dataYear = '';
+    if (arrDate.length) {
+      value = arrDate[0];
+      dataMonth = arrDate[1];
+      dataYear = arrDate[2];
+    }
+    window.console.log(value)
+    window.console.log('dataMonth:', dataMonth);
 
     return (
       <div
@@ -123,8 +133,10 @@ export default class DateInput extends React.Component {
             'DateInput__display-text--focused': focused,
             'DateInput__display-text--disabled': disabled,
           })}
+          data-month={dataMonth}
+          data-year={dataYear}
         >
-          {value || placeholder}
+          {value}
         </div>
       </div>
     );
